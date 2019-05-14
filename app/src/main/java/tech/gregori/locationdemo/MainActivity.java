@@ -20,6 +20,13 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
+    /**
+     * Ativa a obtenção da localização atual, ao receber a permissão de utilizar o GPS.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -40,10 +47,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Obtém um objeto de LocationManager, pelo sistema.
         locationManager =
                 (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+        // Cria um LocationListener, que vai obter a localização do usuário
         locationListener = new LocationListener() {
+            // Executado toda vez que a localização é alterada
             @Override
             public void onLocationChanged(Location location) {
                 Log.i("Location", location.toString());
@@ -65,12 +75,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // if device runs SDK < 23
+        // Se o dispositivo roda SDK < 23
         if (Build.VERSION.SDK_INT < 23) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     0, 0, locationListener);
         } else {
-
+            // se SDK > =23, é necessário fazer a solicitação de uso do GPS, ao usuário.
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
